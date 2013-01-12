@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>edu.utwente.mbd</groupId>
+    <artifactId>commoncrawl-jsusage</artifactId>
+    <version>0.1</version>
+    <name>Javascript Usage Analysis using the Common Crawl web crawl</name>
+    <packaging>pom</packaging>
+    <inceptionYear>2012</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven.compiler.source>1.7</maven.compiler.source>
+	<maven.compiler.target>1.7</maven.compiler.target>
+	<slf4j.version>1.6.1</slf4j.version>
+	<guava.version>13.0.1</guava.version>
+	<jsoup.version>1.7.1</jsoup.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>cloudera</id>
+            <name>repository.cloudera.com</name>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+    </pluginRepositories>
+
+    <modules>
+        <module>scriptparse</module>
+	<module>hadoop</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>full</id>
+            <modules>
+		<!-- modules here -->
+            </modules>
+        </profile>
+
+    </profiles>
+
+    <build>
+        <pluginManagement>
+	</pluginManagement>
+
+        <plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.0</version>
+			<configuration>
+				<source>${maven.compiler.source}</source>
+				<target>${maven.compiler.target}</target>
+				<encoding>${project.build.sourceEncoding}</encoding>
+			</configuration>
+		</plugin>
+        </plugins>
+    </build>
+</project>
