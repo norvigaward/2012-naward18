@@ -1,6 +1,8 @@
 package edu.utwente.mbd;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,5 +46,39 @@ public class TestURLTools {
 		
 		// ignore get parameters
 		assertEquals("foo", URLTools.getFilename("http://www.example.org/foo?bla"));
+	}
+	
+	@Test
+	public void testRelativeURLCheck() throws MalformedURLException{
+		// root of website is relative to itself
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/", "http://www.example.org/"));
+		
+		// detect that protocols are different
+		assertFalse(URLTools.isRelativeTo("https://www.example.org/", "http://www.example.org/"));
+		
+		// subdir relative to super dir
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/subdir/subsubdir/foo.txt", "http://www.example.org/"));
+		 
+		// and reverse
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/", "http://www.example.org/subdir/subsubdir/foo.txt"));
+		
+		// and two nested directories		
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "http://www.example.org/subdir/subsubdir/foo.txt"));
+		
+		// These URL's are not relative:
+		assertFalse(URLTools.isRelativeTo("http://www.example2.org/foodir/foodir2/other.txt", "http://www.example.org/subdir/subsubdir/foo.txt"));
+		assertFalse(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "http://www.example2.org/subdir/subsubdir/foo.txt"));
+		
+		// relative URL's as commonly used:
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "foo.txt"));		
+	}
+	
+	@Test
+	public void testAssumptionsAboutURI() throws URISyntaxException{
+		// complete url
+		new URI("http://www.example.org/relative_only.txt");
+		
+		// relative path only
+		new URI("/relative_only.txt");		
 	}
 }
