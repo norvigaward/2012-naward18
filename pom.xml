@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>edu.utwente.mbd</groupId>
     <artifactId>commoncrawl-jsusage</artifactId>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <name>Javascript Usage Analysis using the Common Crawl web crawl</name>
     <packaging>pom</packaging>
     <inceptionYear>2012</inceptionYear>
@@ -15,6 +15,7 @@
 	<slf4j.version>1.6.1</slf4j.version>
 	<guava.version>13.0.1</guava.version>
 	<jsoup.version>1.7.1</jsoup.version>
+	<junit.version>4.11</junit.version>
     </properties>
 
     <repositories>

@@ -3,13 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>edu.utwente.mbd</groupId>
 	<artifactId>hadoop</artifactId>
-	<version>0.1</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>Hadoop job for JSUsage analysis</name>
 
 	<parent>
 		<groupId>edu.utwente.mbd</groupId>
 		<artifactId>commoncrawl-jsusage</artifactId>
-		<version>0.1</version>
+		<version>0.1-SNAPSHOT</version>
 	</parent>
-
 </project>
