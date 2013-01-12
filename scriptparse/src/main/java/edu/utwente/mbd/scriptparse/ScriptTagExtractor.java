@@ -7,17 +7,24 @@ import java.util.Iterator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.google.common.collect.AbstractIterator;
 
 import static com.google.common.base.Preconditions.*;
+import static edu.utwente.mbd.scriptparse.URLTools.*;
 
 /**
  * Extract script tags form a document
  * @author kockt
  *
  */
-public class ScriptTagExtractor {
+public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 	public final static String SCRIPT_TAG_SELECTOR = "script";
 	public final static String SRC_ATTRIBUTE = "src";
+	
+	private final Document document;
+	private final URL url;
 	
 	/**
 	 * Instantiate tag extractor based on parsed DOM content
@@ -25,39 +32,76 @@ public class ScriptTagExtractor {
 	 * @param addr address of the page
 	 * @throws IllegalArgumentException when arugments are null
 	 */
-	public static Iterable<ScriptInformation> getScripts(String addr, Document content) throws IllegalArgumentException, MalformedURLException{
-		final Document document = checkNotNull(content); // explicit null check
-		final URL url = new URL(checkNotNull(addr));
-		
-		// get script tags from document
-		for (Element elem : document.select(SCRIPT_TAG_SELECTOR)){
-			if (elem.hasAttr(SRC_ATTRIBUTE)){ // external JS
-				// is it local or remote?
-				
-				
-			} else {
-				// match against inline JS
-				// return when it is a match
-			}	
-		}
-		
-		return null;
+	public ScriptTagExtractor(String addr, Document doc) throws IllegalArgumentException, MalformedURLException{
+		document = checkNotNull(doc); // explicit null check
+		url = new URL(checkNotNull(addr));
 	}
 	
 	/**
-	 * "tuple" of (fileName, isInline, isBodyLess)
+	 * Convenience method that instantiates this object and returns the iterator
+	 * @param addr address of page being parsed
+	 * @param content Jsoup DOM of the page
+	 * @return iterator over objects
+	 * @throws IllegalArgumentException content or addr are invalid
+	 * @throws MalformedURLException when addr is invalid
 	 */
-	public class ScriptInformation{
-		public final boolean inline;
-		public final boolean empty;
-		public final boolean selfClosing;
-		public final String fileName;
-		
-		public ScriptInformation(String fileName, boolean inline, boolean empty, boolean selfClosing){
-			this.fileName = checkNotNull(fileName);
-			this.selfClosing = selfClosing;
-			this.inline = inline;
-			this.empty = empty;
+	public static ScriptTagExtractor getScriptTags(String addr, Document content) 
+			throws IllegalArgumentException, MalformedURLException{
+		return new ScriptTagExtractor(addr,  content);		
+	}
+	
+	/**
+	 * Parse a single <SCRIPT> tag. This operation returns null when an element throws an error.
+	 * @param elem element to parse
+	 * @return the script element
+	 */
+	private ScriptInformation parseScriptTag(Element elem){
+		String fileName;
+		try{
+			if (elem.hasAttr(SRC_ATTRIBUTE)) { 
+				final String src = elem.attr("abs:src"); // get absolute URL of source address
+				
+				// when URL is relative: use relative URL otherwise: use full URL without get params
+				if (isRelativeTo(url.toExternalForm(),  src)) {
+					fileName = getFilename(src);
+				} else { // full URL
+					fileName = cleanURL(src);
+				}
+						
+				return new ScriptInformation(fileName, false);
+			} else {
+				// match against inline JS
+				fileName = InlineJavascriptDetector.match(elem.data());
+				
+				// no match? return null.
+				return fileName != null ? new ScriptInformation(fileName,  true) : null;
+			}
+		} catch (MalformedURLException | IllegalArgumentException e) {
+			// skip item
+			return null;
 		}
+	}
+	
+
+	/**
+	 * Create an iterator with the configuration in the current object. This iterator <i>may</i> return <pre>null</pre>
+	 * @return iterator over the script tags
+	 * @throws IllegalArgumentException when arguments are null
+	 * @throws MalformedURLException when URLs are not valid
+	 * @require args != null
+	 */
+	public Iterator<ScriptInformation> iterator(){
+		final Iterator<Element> elements = document.getElementsByTag(SCRIPT_TAG_SELECTOR).iterator();
+		
+		// use AbstractIterator to create the iterator
+		return new AbstractIterator<ScriptInformation>() {
+			@Override
+			protected ScriptInformation computeNext() {
+				while (elements.hasNext())
+					return parseScriptTag(elements.next());
+				
+				return endOfData();	// ... *should* call endOfData when there are no objects left
+			}
+		};
 	}
 }

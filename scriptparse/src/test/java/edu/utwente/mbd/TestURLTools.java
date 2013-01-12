@@ -70,7 +70,20 @@ public class TestURLTools {
 		assertFalse(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "http://www.example2.org/subdir/subsubdir/foo.txt"));
 		
 		// relative URL's as commonly used:
-		assertTrue(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "foo.txt"));		
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "foo.txt"));
+		assertTrue(URLTools.isRelativeTo("http://www.example.org/foodir/foodir2/other.txt", "/foo.txt"));
+	}
+	
+	@Test
+	public void testCleanGetAndFragment() throws MalformedURLException{
+		// get
+		assertEquals(URLTools.cleanURL("http://www.example.org/?foo=bar"), "http://www.example.org/");
+		
+		// fragment
+		assertEquals(URLTools.cleanURL("http://www.example.org/#frag"), "http://www.example.org/");
+		
+		// fragment + get? #wtf
+		assertEquals(URLTools.cleanURL("http://www.example.org/?get=this#frag"), "http://www.example.org/");
 	}
 	
 	@Test

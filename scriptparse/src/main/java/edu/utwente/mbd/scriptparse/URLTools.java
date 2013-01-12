@@ -80,8 +80,19 @@ public class URLTools {
 		URL url1 = new URL(src);
 		URL url2 = new URL(url1, second);
 		
-		System.out.println(String.format("url1: %s url2: %s", url1, url2));
-		
 		return Objects.equal(url1.getProtocol(), url2.getProtocol()) && Objects.equal(url1.getHost(), url2.getHost()) && Objects.equal(url1.getPort(), url2.getPort());
+	}
+	
+	/**
+	 * Strip get variables, fragments from URL
+	 * @param url source url
+	 * @return cleaned up url
+	 * @throws MalformedURLException when URL is invalid
+	 */
+	public static String cleanURL(String addr) throws MalformedURLException{
+		URL src = new URL(addr);
+		
+		URL target = new URL(src.getProtocol(), src.getHost(), src.getPath());
+		return target.toString();
 	}
 }
