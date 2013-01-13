@@ -11,4 +11,19 @@
 		<artifactId>commoncrawl-jsusage</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
+
+	<!-- explicit dependencies that are only needed for the ARC tools -->
+	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<!-- http -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.2.3</version>
+		</dependency>
+	</dependencies>
 </project>
