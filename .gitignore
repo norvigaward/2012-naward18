@@ -4,6 +4,6 @@
 .settings
 # idea
 *.iml
-
+.idea
 # mvn target:
 target

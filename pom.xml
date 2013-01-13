@@ -30,7 +30,8 @@
     </pluginRepositories>
 
     <modules>
-        <module>scriptparse</module>
+       <module>arc</module>
+       <module>scriptparse</module>
 	<module>hadoop</module>
     </modules>
 
