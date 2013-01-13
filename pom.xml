@@ -39,7 +39,7 @@
 		<module>hadoop</module>
 	</modules>
 
-	<!-- shared dependencies -->
+	<!-- shared dependencies - all needed in at least two projects -->
 	<dependencies>
 		<!-- Google Guava collections etc -->
 		<dependency>

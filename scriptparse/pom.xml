@@ -4,12 +4,26 @@
 	<groupId>edu.utwente.mbd</groupId>
 	<artifactId>scriptparse</artifactId>
 	<version>0.1-SNAPSHOT</version>
+	<name>&lt;script&gt; tag extraction</name>
 
 	<parent>
 		<groupId>edu.utwente.mbd</groupId>
 		<artifactId>commoncrawl-jsusage</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
+	
+	<developers>
+		<developer>
+			<id>ties</id>
+			<name>Ties de Kock</name>
+			<email>ties@tiesdekock.nl</email>
+		</developer>
+		<developer>
+			<id>dennis</id>
+			<name>Dennis Pallett</name>
+			<email>dennis@pallett.nl</email>			
+		</developer>
+	</developers>
 
 	<dependencies>
 		<!-- Google Guava collections etc -->
