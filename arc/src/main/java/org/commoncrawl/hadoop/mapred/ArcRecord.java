@@ -543,9 +543,9 @@ public class ArcRecord
 
     }
 
-    // if anything goes wrong, try ISO-8859-1
+    // if anything goes wrong, let JSoup try to detect the encoding itself instead of settings it to ISO-8859-1 explicitly.
     if (charset == null)
-      charset = "ISO-8859-1";
+      charset = null; //charset = "ISO-8859-1";
     
     // parse the content using the derived charset and the URL from the ARC header
     return Jsoup.parse(this._httpResponse.getEntity().getContent(), charset, this._url);
