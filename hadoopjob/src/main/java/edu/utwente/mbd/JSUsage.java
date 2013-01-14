@@ -134,7 +134,7 @@ public class JSUsage extends Configured implements Tool{
 		FileOutputFormat.setOutputPath(job, new Path(outputPath));
 		
 		// compressed output
-		FileOutputFormat.setCompressOutput(job, true);
+		FileOutputFormat.setCompressOutput(job, false);
 
 		// Set which InputFormat class to use.
 		job.setInputFormatClass(ArcInputFormat.class);
