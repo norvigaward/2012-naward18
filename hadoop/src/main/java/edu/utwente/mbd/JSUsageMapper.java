@@ -1,6 +1,7 @@
 package edu.utwente.mbd;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -9,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
-import org.apache.hadoop.thirdparty.guava.common.collect.Lists;
 
 import edu.utwente.mbd.scriptparse.ScriptInformation;
 import edu.utwente.mbd.scriptparse.ScriptInformation.Type;
@@ -22,6 +22,8 @@ import org.commoncrawl.hadoop.mapred.ArcRecord;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -121,10 +123,16 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 			libs.add(inf.fileName);
 			// when it is remote js: add complete url to list for co-occurence as well
 			if (inf.type == Type.REMOTE)
-				libs.add(inf.srcAddr);
-			
+				libs.add(inf.pageAddr);
 		}
+		// sort libs
+		List<String> sortedLibs = Ordering.natural().sortedCopy(libs);
 		
+		// emit libs
+		StringBuilder concat = new StringBuilder(COOCCURRENCE_PREFIX).append(SEP);
+		join.appendTo(concat,  sortedLibs);
+		
+		context.write(new Text(concat.toString()), outVal);
 	}
 
 }

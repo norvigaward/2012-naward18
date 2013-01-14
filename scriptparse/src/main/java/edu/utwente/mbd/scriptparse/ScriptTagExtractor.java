@@ -74,8 +74,8 @@ public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 					addr = LOCALHOST;
 					type = Type.LOCAL;
 				} else { // full URL
-					fileName = cleanURL(src);
-					addr = url.toExternalForm();
+					fileName = getFilename(src);
+					addr = cleanURL(src);
 					type = Type.REMOTE;
 				}
 				return new ScriptInformation(fileName, addr, type);
