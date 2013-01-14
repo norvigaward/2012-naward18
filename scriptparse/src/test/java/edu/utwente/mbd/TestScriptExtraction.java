@@ -2,6 +2,7 @@ package edu.utwente.mbd;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 
 import org.jsoup.Jsoup;
@@ -52,7 +53,7 @@ public class TestScriptExtraction {
 		// it has a jQuery plugin
 		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", ScriptTagExtractor.LOCALHOST, Type.LOCAL)));
 		// it has google CDN
-		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", url, Type.REMOTE)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.min.js", "https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", Type.REMOTE)));
 		
 		basicAsserts(url, doc);			}
 	
@@ -77,7 +78,7 @@ public class TestScriptExtraction {
 		Document doc = Jsoup.parse(is, null, url);
 		
 		assertEquals(1, Iterables.size(buildExtractor(url,  doc)));
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", url, Type.INLINE)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", ScriptTagExtractor.LOCALHOST, Type.INLINE)));
 		
 		basicAsserts(url, doc);		
 	}
@@ -90,7 +91,7 @@ public class TestScriptExtraction {
 		Document doc = Jsoup.parse(is, null, url);
 		
 		assertEquals(1, Iterables.size(buildExtractor(url,  doc)));
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", url, Type.INLINE)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", ScriptTagExtractor.LOCALHOST, Type.INLINE)));
 		
 		basicAsserts(url, doc);		
 	}
@@ -105,11 +106,11 @@ public class TestScriptExtraction {
 		// inline + 4 actual scripts
 		assertEquals(5, Iterables.size(buildExtractor(url,  doc)));
 		
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", url, Type.INLINE)));
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", url, Type.INLINE)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", ScriptTagExtractor.LOCALHOST, Type.INLINE)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", ScriptTagExtractor.LOCALHOST, Type.INLINE)));
 		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", ScriptTagExtractor.LOCALHOST, Type.LOCAL)));
 		// it has google CDN
-		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", url, Type.REMOTE)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.min.js", "https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", Type.REMOTE)));
 		
 		
 		basicAsserts(url, doc);		

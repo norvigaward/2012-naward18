@@ -84,7 +84,7 @@ public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 				fileName = InlineJavascriptDetector.match(elem.data());
 				
 				// no match? return null.
-				return fileName != null ? new ScriptInformation(fileName, url.toExternalForm(), Type.INLINE) : null;
+				return fileName != null ? new ScriptInformation(fileName, LOCALHOST, Type.INLINE) : null;
 			}
 		} catch (MalformedURLException | IllegalArgumentException e) {
 			// skip item
