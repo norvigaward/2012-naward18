@@ -152,6 +152,8 @@ public class JSUsage extends Configured implements Tool{
 		// Set which Mapper and Reducer classes to use.
 		job.setMapperClass(JSUsageMapper.class);
 		job.setReducerClass(LongSumReducer.class);
+		// set combiner
+		job.setCombinerClass(LongSumReducer.class);
 
 		if (job.waitForCompletion(true)) {
 			return 0;
