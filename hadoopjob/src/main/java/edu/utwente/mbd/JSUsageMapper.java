@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -36,8 +37,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
 public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
+	// Thread pool with executors
 	private final ListeningExecutorService executor = MoreExecutors
-			.listeningDecorator(MoreExecutors.sameThreadExecutor());
+			.listeningDecorator(Executors.newCachedThreadPool());
 
 	private static final Logger LOG = Logger.getLogger(JSUsage.class);
 	
@@ -103,6 +105,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 			
 			context.getCounter(MAPPERCOUNTER.SUCCESS).increment(1); // log succesful files
 		} catch (InterruptedException e) { // timeout on Future.get()
+			LOG.error(String.format("Interrupted on file %s", value.getArchiveDate()));
 			context.getCounter(MAPPERCOUNTER.TIMEOUT).increment(1);
 		} catch (Throwable e) {
 			if (e instanceof OutOfMemoryError) { // occassionally Jsoup parser
