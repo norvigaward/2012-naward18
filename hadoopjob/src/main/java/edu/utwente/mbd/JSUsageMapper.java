@@ -16,6 +16,8 @@ import edu.utwente.mbd.scriptparse.ScriptInformation;
 import edu.utwente.mbd.scriptparse.ScriptInformation.Type;
 import edu.utwente.mbd.scriptparse.ScriptTagExtractor;
 
+import edu.utwente.mbd.scriptparse.URLTools;
+
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.log4j.Logger;
@@ -129,15 +131,17 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 		for (ScriptInformation inf : scripts) { // handle all scripts
 			if (inf == null) // malformed URL or smth
 				continue;
+
+			String protocol = URLTools.isSecureHTTP(inf.addr) ? URLTools.HTTPS : URLTools.HTTP;
 			
 			// prefix inline keys
 			String key = inf.type == Type.INLINE ? INLINE_PREFIX+inf.fileName : inf.fileName;
 			// emit [filename, hostname of file], add to list. When remote: key = URL
-			if (inf.type == Type.REMOTE) { 
-				context.write(new Text(join.join(COUNT_PREFIX, ScriptTagExtractor.LOCALHOST)), outVal);
-			} else {							
-				context.write(new Text(join.join(COUNT_PREFIX, key)), outVal);
+			if (inf.type == Type.REMOTE) {
+				// write full url *and* regular
+				context.write(new Text(join.join(COUNT_PREFIX, inf.addr, protocol)), outVal);				
 			}
+			context.write(new Text(join.join(COUNT_PREFIX, key, protocol)), outVal);
 			
 			libs.add(inf.fileName);
 		}

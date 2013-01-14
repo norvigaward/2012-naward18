@@ -12,11 +12,11 @@ public final class ScriptInformation{
 	
 	public final Type type;
 	public final String fileName;
-	public final String pageAddr;
+	public final String addr;
 	
-	public ScriptInformation(String fileName, String pageAddr, Type type){
+	public ScriptInformation(String fileName, String addr, Type type){
 		this.fileName = checkNotNull(fileName);
-		this.pageAddr = checkNotNull(pageAddr);
+		this.addr = checkNotNull(addr);
 		this.type = type;
 	}
 	
@@ -25,7 +25,7 @@ public final class ScriptInformation{
 		if (obj instanceof ScriptInformation){
 			ScriptInformation that = (ScriptInformation)obj;
 			
-			return Objects.equal(this.type, that.type) && Objects.equal(this.pageAddr, that.pageAddr) && Objects.equal(this.fileName, that.fileName);			
+			return Objects.equal(this.type, that.type) && Objects.equal(this.addr, that.addr) && Objects.equal(this.fileName, that.fileName);			
 		}
 		return false;
 	}

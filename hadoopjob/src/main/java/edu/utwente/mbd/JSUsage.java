@@ -132,7 +132,9 @@ public class JSUsage extends Configured implements Tool{
 		// Set the path where final output 'part' files will be saved.
 		LOG.info("setting output path to '" + outputPath + "'");
 		FileOutputFormat.setOutputPath(job, new Path(outputPath));
-		FileOutputFormat.setCompressOutput(job, false);
+		
+		// compressed output
+		FileOutputFormat.setCompressOutput(job, true);
 
 		// Set which InputFormat class to use.
 		job.setInputFormatClass(ArcInputFormat.class);

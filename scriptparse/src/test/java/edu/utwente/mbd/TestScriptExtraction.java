@@ -47,7 +47,7 @@ public class TestScriptExtraction {
 		int total = 0, inline = 0, external = 0, unrecognized = 0;
 		
 		for (ScriptInformation script : buildExtractor(url,  doc)){
-			System.out.println(String.format("%s %s %s", script.fileName, script.pageAddr, script.type));
+			System.out.println(String.format("%s %s %s", script.fileName, script.addr, script.type));
 		}
 				
 		// it has a jQuery plugin
