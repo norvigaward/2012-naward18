@@ -3,6 +3,7 @@ package edu.utwente.mbd;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -24,6 +25,7 @@ import org.jsoup.nodes.Element;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
 import com.google.common.base.Joiner;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -113,7 +115,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 	}
 	
 	private void handleScriptTags (Iterable<ScriptInformation> scripts, Context context) throws IOException, InterruptedException{
-		List<String> libs = Lists.newArrayList();
+		Set<String> libs = Sets.newHashSet(); // remove duplicates
 
 		for (ScriptInformation inf : scripts) { // handle all scripts
 			if (inf == null) // malformed URL or smth
