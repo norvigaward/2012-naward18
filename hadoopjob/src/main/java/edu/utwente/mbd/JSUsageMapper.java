@@ -59,7 +59,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 	private LongWritable outVal = new LongWritable(1);
 
 	public static enum MAPPERCOUNTER {
-		NOT_RECOGNIZED_AS_HTML, HTML_PARSE_FAILURE, HTML_PAGE_TOO_LARGE, EXCEPTIONS, SUCCESS, OUT_OF_MEMORY, TIMEOUT
+		NOT_RECOGNIZED_AS_HTML, HTML_PARSE_SUCCESSFUL, HTML_PARSE_FAILURE, HTML_PAGE_TOO_LARGE, EXCEPTIONS, MAP_TASK_SUCCESS, OUT_OF_MEMORY, TIMEOUT
 	}
 
 	@Override
@@ -96,14 +96,15 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 										.increment(1);
 								return Lists.newArrayList();
 							}
+							
+							// increase additional counter - explicitly report progress
+							context.getCounter(MAPPERCOUNTER.HTML_PARSE_SUCCESSFUL).increment(1);
 							return ScriptTagExtractor.getScriptTags(url, doc);
 						}
 					});
 
 			// Handle all the script tags:
 			handleScriptTags(scripts.get(2, TimeUnit.MINUTES), url, context);
-			
-			context.getCounter(MAPPERCOUNTER.SUCCESS).increment(1); // log succesful files
 		} catch (InterruptedException e) { // timeout on Future.get()
 			LOG.error(String.format("Interrupted on file %s", value.getArchiveDate()));
 			context.getCounter(MAPPERCOUNTER.TIMEOUT).increment(1);
@@ -117,6 +118,8 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 			LOG.error("Caught Exception", e);
 			context.getCounter(MAPPERCOUNTER.EXCEPTIONS).increment(1);
 		}
+		
+		context.getCounter(MAPPERCOUNTER.MAP_TASK_SUCCESS).increment(1);
 	}
 	
 	/**
