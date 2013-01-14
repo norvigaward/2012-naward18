@@ -109,7 +109,7 @@ public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 		return new AbstractIterator<ScriptInformation>() {
 			@Override
 			protected ScriptInformation computeNext() {
-				while (elements.hasNext())
+				if (elements.hasNext())
 					return parseScriptTag(elements.next());
 				
 				return endOfData();	// ... *should* call endOfData when there are no objects left
