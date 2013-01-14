@@ -42,10 +42,12 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 	public final static String COOCCURRENCE_PREFIX = "co";
 	
 	public final static String SEP = "\t";
+	public final static String COMMA = ",";
 	public final static String NULL = "NULL";
 	
 	
 	private final static Joiner join = Joiner.on(SEP).useForNull(NULL);
+	private final static Joiner joinComma = Joiner.on(COMMA).useForNull(NULL);
 
 	private Document doc;
 	private LongWritable outVal = new LongWritable(1);
@@ -93,7 +95,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 					});
 
 			// Handle all the script tags:
-			handleScriptTags(scripts.get(10, TimeUnit.SECONDS), context);
+			handleScriptTags(scripts.get(2, TimeUnit.MINUTES), context);
 		} catch (InterruptedException e) { // timeout on Future.get()
 			context.getCounter(MAPPERCOUNTER.TIMEOUT).increment(1);
 		} catch (Throwable e) {
@@ -129,10 +131,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 		List<String> sortedLibs = Ordering.natural().sortedCopy(libs);
 		
 		// emit libs
-		StringBuilder concat = new StringBuilder(COOCCURRENCE_PREFIX).append(SEP);
-		join.appendTo(concat,  sortedLibs);
-		
-		context.write(new Text(concat.toString()), outVal);
+		context.write(new Text(join.join(COOCCURRENCE_PREFIX, joinComma.join(sortedLibs)).toString()), outVal);
 	}
 
 }
