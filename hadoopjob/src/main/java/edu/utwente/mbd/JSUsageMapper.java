@@ -99,7 +99,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 					});
 
 			// Handle all the script tags:
-			handleScriptTags(scripts.get(2, TimeUnit.MINUTES), context);
+			handleScriptTags(scripts.get(2, TimeUnit.MINUTES), url, context);
 			
 			context.getCounter(MAPPERCOUNTER.SUCCESS).increment(1); // log succesful files
 		} catch (InterruptedException e) { // timeout on Future.get()
@@ -125,14 +125,14 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private void handleScriptTags (Iterable<ScriptInformation> scripts, Context context) throws IOException, InterruptedException{
+	private void handleScriptTags (final Iterable<ScriptInformation> scripts, final String url, final Context context) throws IOException, InterruptedException{
 		Set<String> libs = Sets.newHashSet(); // remove duplicates
 
 		for (ScriptInformation inf : scripts) { // handle all scripts
 			if (inf == null) // malformed URL or smth
 				continue;
 
-			String protocol = URLTools.isSecureHTTP(inf.addr) ? URLTools.HTTPS : URLTools.HTTP;
+			String protocol = URLTools.isSecureHTTP(url) ? URLTools.HTTPS : URLTools.HTTP;
 			
 			// prefix inline keys
 			String key = inf.type == Type.INLINE ? INLINE_PREFIX+inf.fileName : inf.fileName;
