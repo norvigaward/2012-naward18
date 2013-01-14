@@ -7,6 +7,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -553,8 +555,12 @@ public class ArcRecord
     }
 
     // if anything goes wrong, let JSoup try to detect the encoding itself instead of settings it to ISO-8859-1 explicitly.
-    if (charset == null)
-      charset = null; //charset = "ISO-8859-1";
+    try {
+    	if (!Charset.isSupported(charset))
+    		charset = null;
+    } catch (IllegalCharsetNameException e) {
+    	charset = null; // let jSoup decide
+    }
     
     // parse the content using the derived charset and the URL from the ARC header
     return Jsoup.parse(this._httpResponse.getEntity().getContent(), charset, this._url);
