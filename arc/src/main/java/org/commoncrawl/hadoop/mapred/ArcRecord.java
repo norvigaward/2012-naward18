@@ -41,6 +41,9 @@ public class ArcRecord
     implements Writable {
 
   private static final Logger LOG = Logger.getLogger(ArcRecord.class);
+  
+  public static final String SQUOTE = "'";
+  public static final String DQUOTE = "'";
 
   // ARC v1 metadata
   private String _url;
@@ -538,6 +541,12 @@ public class ArcRecord
     try {
       // Default value returned is "text/plain" with charset of ISO-8859-1.
       charset = ContentType.getOrDefault(this._httpResponse.getEntity()).getCharset().name();
+      
+      if (charset.contains(SQUOTE)) // 'iso-8859-1' is actually in the data. 
+    	  charset = charset.replace(SQUOTE,  "");
+      
+      if (charset.contains(DQUOTE))
+    	  charset = charset.replace(DQUOTE,  "");
     }
     catch (Throwable ex) {
 

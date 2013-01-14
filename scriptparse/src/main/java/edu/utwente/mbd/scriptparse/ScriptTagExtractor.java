@@ -103,14 +103,14 @@ public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 	 * @require args != null
 	 */
 	public Iterator<ScriptInformation> iterator(){
-		final Iterator<Element> elements = document.getElementsByTag(SCRIPT_TAG_SELECTOR).iterator();
+		final Elements elements = document.getElementsByTag(SCRIPT_TAG_SELECTOR);
 		
 		// use AbstractIterator to create the iterator
 		return new AbstractIterator<ScriptInformation>() {
 			@Override
 			protected ScriptInformation computeNext() {
-				while (elements.hasNext())
-					return parseScriptTag(elements.next());
+				for (Element e : elements)
+					return parseScriptTag(e);
 				
 				return endOfData();	// ... *should* call endOfData when there are no objects left
 			}
