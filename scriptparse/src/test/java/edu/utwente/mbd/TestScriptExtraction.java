@@ -68,6 +68,53 @@ public class TestScriptExtraction {
 		basicAsserts(url, doc);		
 	}
 	
+	@Test
+	public void testFBConnect() throws IOException{
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("html/fbconnect.html");
+		String url = "http://www.example.org";
+		
+		Document doc = Jsoup.parse(is, null, url);
+		
+		assertEquals(1, Iterables.size(buildExtractor(url,  doc)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", true)));
+		
+		basicAsserts(url, doc);		
+	}
+	
+	@Test
+	public void testTwitter() throws IOException{
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("html/twitter.html");
+		String url = "http://www.example.org";
+		
+		Document doc = Jsoup.parse(is, null, url);
+		
+		assertEquals(1, Iterables.size(buildExtractor(url,  doc)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", true)));
+		
+		basicAsserts(url, doc);		
+	}
+	
+	@Test
+	public void testMulti() throws IOException{
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream("html/multi.html");
+		String url = "http://www.example.org";
+		
+		Document doc = Jsoup.parse(is, null, url);
+		
+		// inline + 4 actual scripts
+		assertEquals(5, Iterables.size(buildExtractor(url,  doc)));
+		
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", true)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", true)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", false)));
+		// it has google CDN
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", false)));
+		
+		
+		basicAsserts(url, doc);		
+	}
+	
+	
 	private void basicAsserts(String url, Document doc){
 		int jsTagCount = doc.getElementsByTag("script").size();
 		int total = 0, inline = 0, external = 0, unrecognized = 0;
