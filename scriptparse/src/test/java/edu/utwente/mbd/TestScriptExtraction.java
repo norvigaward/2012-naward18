@@ -45,11 +45,7 @@ public class TestScriptExtraction {
 		
 		int jsTagCount = doc.getElementsByTag("script").size();
 		int total = 0, inline = 0, external = 0, unrecognized = 0;
-		
-		for(ScriptInformation s : buildExtractor(url, doc)){
-			System.out.println(String.format("%s %s inline? %s".format(s.fileName, s.pageAddr, s.type)));
-		}
-		
+				
 		// it has a jQuery plugin
 		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", ScriptTagExtractor.LOCALHOST, Type.LOCAL)));
 		// it has google CDN
