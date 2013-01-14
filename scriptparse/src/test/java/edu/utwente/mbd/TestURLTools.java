@@ -42,7 +42,7 @@ public class TestURLTools {
 		
 		// what happens with sub directories?
 		assertEquals("foo", URLTools.getFilename("http://www.example.org/subdir/second/foo"));
-		assertEquals("/subdir/foo/", URLTools.getFilename("http://www.example.org/subdir/foo/"));
+		assertEquals("foo", URLTools.getFilename("http://www.example.org/subdir/foo/"));
 		
 		// ignore get parameters
 		assertEquals("foo", URLTools.getFilename("http://www.example.org/foo?bla"));

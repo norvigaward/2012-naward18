@@ -135,8 +135,6 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 			// emit [filename, hostname of file], add to list. When remote: key = URL
 			if (inf.type == Type.REMOTE) { 
 				context.write(new Text(join.join(COUNT_PREFIX, ScriptTagExtractor.LOCALHOST)), outVal);
-				// when it is remote js: add complete url to list for co-occurence as well
-				libs.add(inf.pageAddr);
 			} else {							
 				context.write(new Text(join.join(COUNT_PREFIX, key)), outVal);
 			}

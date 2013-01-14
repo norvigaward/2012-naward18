@@ -16,7 +16,7 @@ public class URLTools {
 	public final static String HTTPS = "https";
 
 	private final static Splitter filenameSplitter = Splitter.on('/')
-			.trimResults();
+			.trimResults().omitEmptyStrings();
 
 	/**
 	 * Is the given URL a HTTPS url?
@@ -56,7 +56,8 @@ public class URLTools {
 
 		String path = url.getPath();
 		if (path.endsWith("/")) {
-			return path; // was index of site or a directory
+			if (path.equals("/"))
+				return path;
 		}
 
 		// this is an relative URL from the root, get the last piece
