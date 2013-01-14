@@ -86,8 +86,10 @@ public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 				// no match? return null.
 				return fileName != null ? new ScriptInformation(fileName, LOCALHOST, Type.INLINE) : null;
 			}
-		} catch (MalformedURLException | IllegalArgumentException e) {
+		} catch (MalformedURLException e){
 			// skip item
+			return null;
+		} catch (IllegalArgumentException e) {
 			return null;
 		}
 	}
