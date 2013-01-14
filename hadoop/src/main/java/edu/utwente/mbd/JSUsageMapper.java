@@ -114,6 +114,15 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 		}
 	}
 	
+	/**
+	 * Write the output for the given ScriptInfo
+	 * 
+	 * Note that it no longer writes <pre>inf.pageAddr</pre> because in practice this is always localhost.
+	 * @param scripts
+	 * @param context
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	private void handleScriptTags (Iterable<ScriptInformation> scripts, Context context) throws IOException, InterruptedException{
 		Set<String> libs = Sets.newHashSet(); // remove duplicates
 
@@ -125,11 +134,11 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 			String key = inf.type == Type.INLINE ? INLINE_PREFIX+inf.fileName : inf.fileName;
 			// emit [filename, hostname of file], add to list. When remote: key = URL
 			if (inf.type == Type.REMOTE) { 
-				context.write(new Text(join.join(COUNT_PREFIX, inf.pageAddr, ScriptTagExtractor.LOCALHOST)), outVal);
+				context.write(new Text(join.join(COUNT_PREFIX, ScriptTagExtractor.LOCALHOST)), outVal);
 				// when it is remote js: add complete url to list for co-occurence as well
 				libs.add(inf.pageAddr);
-			} else {
-				context.write(new Text(join.join(COUNT_PREFIX, key, inf.pageAddr)), outVal);
+			} else {							
+				context.write(new Text(join.join(COUNT_PREFIX, key)), outVal);
 			}
 			
 			libs.add(inf.fileName);
