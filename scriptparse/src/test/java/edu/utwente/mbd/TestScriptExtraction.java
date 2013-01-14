@@ -45,6 +45,10 @@ public class TestScriptExtraction {
 		
 		int jsTagCount = doc.getElementsByTag("script").size();
 		int total = 0, inline = 0, external = 0, unrecognized = 0;
+		
+		for (ScriptInformation script : buildExtractor(url,  doc)){
+			System.out.println(String.format("%s %s %s", script.fileName, script.pageAddr, script.type));
+		}
 				
 		// it has a jQuery plugin
 		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", ScriptTagExtractor.LOCALHOST, Type.LOCAL)));

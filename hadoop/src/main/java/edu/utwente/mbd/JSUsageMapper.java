@@ -53,7 +53,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 	private LongWritable outVal = new LongWritable(1);
 
 	public static enum MAPPERCOUNTER {
-		NOT_RECOGNIZED_AS_HTML, HTML_PARSE_FAILURE, HTML_PAGE_TOO_LARGE, EXCEPTIONS, OUT_OF_MEMORY, TIMEOUT
+		NOT_RECOGNIZED_AS_HTML, HTML_PARSE_FAILURE, HTML_PAGE_TOO_LARGE, EXCEPTIONS, SUCCESS, OUT_OF_MEMORY, TIMEOUT
 	}
 
 	@Override
@@ -96,6 +96,8 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 
 			// Handle all the script tags:
 			handleScriptTags(scripts.get(2, TimeUnit.MINUTES), context);
+			
+			context.getCounter(MAPPERCOUNTER.SUCCESS).increment(1); // log succesful files
 		} catch (InterruptedException e) { // timeout on Future.get()
 			context.getCounter(MAPPERCOUNTER.TIMEOUT).increment(1);
 		} catch (Throwable e) {
@@ -119,13 +121,16 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 			
 			// prefix inline keys
 			String key = inf.type == Type.INLINE ? INLINE_PREFIX+inf.fileName : inf.fileName;
-			// emit [filename, hostname of file], add to list.			
-			context.write(new Text(join.join(COUNT_PREFIX, key, inf.pageAddr)), outVal);
+			// emit [filename, hostname of file], add to list. When remote: key = URL
+			if (inf.type == Type.REMOTE) { 
+				context.write(new Text(join.join(COUNT_PREFIX, inf.pageAddr, ScriptTagExtractor.LOCALHOST)), outVal);
+				// when it is remote js: add complete url to list for co-occurence as well
+				libs.add(inf.pageAddr);
+			} else {
+				context.write(new Text(join.join(COUNT_PREFIX, key, inf.pageAddr)), outVal);
+			}
 			
 			libs.add(inf.fileName);
-			// when it is remote js: add complete url to list for co-occurence as well
-			if (inf.type == Type.REMOTE)
-				libs.add(inf.pageAddr);
 		}
 		// sort libs
 		List<String> sortedLibs = Ordering.natural().sortedCopy(libs);
