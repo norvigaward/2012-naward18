@@ -154,6 +154,9 @@ public class JSUsage extends Configured implements Tool{
 		job.setReducerClass(LongSumReducer.class);
 		// set combiner
 		job.setCombinerClass(LongSumReducer.class);
+		
+		// name it:
+		job.setJobName("JSUsage - Javascript Co-occurrence");
 
 		if (job.waitForCompletion(true)) {
 			return 0;

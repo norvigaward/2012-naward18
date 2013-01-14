@@ -1,40 +1,32 @@
 package edu.utwente.mbd;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.log4j.Logger;
+import org.commoncrawl.hadoop.mapred.ArcRecord;
+import org.jsoup.nodes.Document;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 
 import edu.utwente.mbd.scriptparse.ScriptInformation;
 import edu.utwente.mbd.scriptparse.ScriptInformation.Type;
 import edu.utwente.mbd.scriptparse.ScriptTagExtractor;
-
 import edu.utwente.mbd.scriptparse.URLTools;
-
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
-import org.commoncrawl.hadoop.mapred.ArcRecord;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
-import com.google.common.base.Joiner;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 
 public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 	// Thread pool with executors
@@ -97,7 +89,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 								return Lists.newArrayList();
 							}
 							
-							// increase additional counter - explicitly report progress
+							// success counter - explicitly report progress
 							context.getCounter(MAPPERCOUNTER.HTML_PARSE_SUCCESSFUL).increment(1);
 							return ScriptTagExtractor.getScriptTags(url, doc);
 						}
@@ -105,7 +97,7 @@ public class JSUsageMapper extends Mapper<Text, ArcRecord, Text, LongWritable> {
 
 			// Handle all the script tags:
 			handleScriptTags(scripts.get(2, TimeUnit.MINUTES), url, context);
-		} catch (InterruptedException e) { // timeout on Future.get()
+		} catch (TimeoutException e) { // timeout on Future.get()
 			LOG.error(String.format("Interrupted on file %s", value.getArchiveDate()));
 			context.getCounter(MAPPERCOUNTER.TIMEOUT).increment(1);
 		} catch (Throwable e) {
