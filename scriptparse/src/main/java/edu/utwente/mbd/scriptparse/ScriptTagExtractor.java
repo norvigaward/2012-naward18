@@ -11,6 +11,8 @@ import org.jsoup.select.Elements;
 
 import com.google.common.collect.AbstractIterator;
 
+import edu.utwente.mbd.scriptparse.ScriptInformation.Type;
+
 import static com.google.common.base.Preconditions.*;
 import static edu.utwente.mbd.scriptparse.URLTools.*;
 
@@ -22,6 +24,8 @@ import static edu.utwente.mbd.scriptparse.URLTools.*;
 public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 	public final static String SCRIPT_TAG_SELECTOR = "script";
 	public final static String SRC_ATTRIBUTE = "src";
+	
+	public final static String LOCALHOST = "localhost";
 	
 	private final Document document;
 	private final URL url;
@@ -60,21 +64,27 @@ public class ScriptTagExtractor implements Iterable<ScriptInformation>{
 		try{
 			if (elem.hasAttr(SRC_ATTRIBUTE)) { 
 				final String src = elem.attr("abs:src"); // get absolute URL of source address
+				String addr;
+				Type type;
+				
 				
 				// when URL is relative: use relative URL otherwise: use full URL without get params
 				if (isRelativeTo(url.toExternalForm(),  src)) {
 					fileName = getFilename(src);
+					addr = LOCALHOST;
+					type = Type.LOCAL;
 				} else { // full URL
 					fileName = cleanURL(src);
+					addr = url.toExternalForm();
+					type = Type.REMOTE;
 				}
-						
-				return new ScriptInformation(fileName, false);
+				return new ScriptInformation(fileName, addr, type);
 			} else {
 				// match against inline JS
 				fileName = InlineJavascriptDetector.match(elem.data());
 				
 				// no match? return null.
-				return fileName != null ? new ScriptInformation(fileName,  true) : null;
+				return fileName != null ? new ScriptInformation(fileName, url.toExternalForm(), Type.INLINE) : null;
 			}
 		} catch (MalformedURLException | IllegalArgumentException e) {
 			// skip item

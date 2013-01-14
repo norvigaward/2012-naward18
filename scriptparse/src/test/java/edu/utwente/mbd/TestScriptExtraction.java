@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 
 import edu.utwente.mbd.scriptparse.ScriptTagExtractor;
 import edu.utwente.mbd.scriptparse.ScriptInformation;
+import edu.utwente.mbd.scriptparse.ScriptInformation.Type;
 
 public class TestScriptExtraction {
 	private ScriptTagExtractor buildExtractor(String url, Document doc){
@@ -45,13 +46,13 @@ public class TestScriptExtraction {
 		int total = 0, inline = 0, external = 0, unrecognized = 0;
 		
 		for(ScriptInformation s : buildExtractor(url, doc)){
-			System.out.println(String.format("%s inline? %b".format(s.fileName, s.inline)));
+			System.out.println(String.format("%s inline? %b".format(s.fileName, s.type)));
 		}
 		
 		// it has a jQuery plugin
-		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", false)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", ScriptTagExtractor.LOCALHOST, Type.LOCAL)));
 		// it has google CDN
-		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", false)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", url, Type.REMOTE)));
 		
 		basicAsserts(url, doc);			}
 	
@@ -76,7 +77,7 @@ public class TestScriptExtraction {
 		Document doc = Jsoup.parse(is, null, url);
 		
 		assertEquals(1, Iterables.size(buildExtractor(url,  doc)));
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", true)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", url, Type.INLINE)));
 		
 		basicAsserts(url, doc);		
 	}
@@ -89,7 +90,7 @@ public class TestScriptExtraction {
 		Document doc = Jsoup.parse(is, null, url);
 		
 		assertEquals(1, Iterables.size(buildExtractor(url,  doc)));
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", true)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", url, Type.INLINE)));
 		
 		basicAsserts(url, doc);		
 	}
@@ -104,11 +105,11 @@ public class TestScriptExtraction {
 		// inline + 4 actual scripts
 		assertEquals(5, Iterables.size(buildExtractor(url,  doc)));
 		
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", true)));
-		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", true)));
-		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", false)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("twitter", url, Type.INLINE)));
+		assertTrue(Iterables.contains(buildExtractor(url,  doc), new ScriptInformation("facebook", url, Type.INLINE)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("jquery.colorbox-min.js", ScriptTagExtractor.LOCALHOST, Type.LOCAL)));
 		// it has google CDN
-		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", false)));
+		assertTrue(Iterables.contains(buildExtractor(url, doc), new ScriptInformation("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js", url, Type.REMOTE)));
 		
 		
 		basicAsserts(url, doc);		
@@ -117,21 +118,23 @@ public class TestScriptExtraction {
 	
 	private void basicAsserts(String url, Document doc){
 		int jsTagCount = doc.getElementsByTag("script").size();
-		int total = 0, inline = 0, external = 0, unrecognized = 0;
+		int total = 0, inline = 0, external = 0, unrecognized = 0, local = 0;
 		
 		for(ScriptInformation si : buildExtractor(url, doc)){
 			if (si == null){
 				unrecognized++;
-			} else if (si.inline) {
+			} else if (si.type == Type.INLINE) {
 				inline++;
-			} else {
+			} else if (si.type == Type.REMOTE) {
 				external++;
+			} else if (si.type == Type.LOCAL) {
+				local++;
 			}
 			
 			total++;	
 		}
 		
-		assertTrue (inline + external + unrecognized == total); // trivial really
+		assertTrue (local + inline + external + unrecognized == total); // trivial really
 		assertEquals(jsTagCount, total);
 	}
 }

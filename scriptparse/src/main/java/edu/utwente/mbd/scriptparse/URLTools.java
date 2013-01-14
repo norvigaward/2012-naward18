@@ -85,7 +85,7 @@ public class URLTools {
 	
 	/**
 	 * Strip get variables, fragments from URL
-	 * @param url source url
+	 * @param pageAddr source url
 	 * @return cleaned up url
 	 * @throws MalformedURLException when URL is invalid
 	 */

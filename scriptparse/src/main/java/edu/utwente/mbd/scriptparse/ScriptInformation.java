@@ -8,12 +8,16 @@ import com.google.common.base.Objects;
  * "tuple" of (fileName, isInline, isBodyLess)
  */
 public final class ScriptInformation{
-	public final boolean inline;
-	public final String fileName;
+	public static enum Type { INLINE, LOCAL, REMOTE };
 	
-	public ScriptInformation(String fileName, boolean inline){
+	public final Type type;
+	public final String fileName;
+	public final String pageAddr;
+	
+	public ScriptInformation(String fileName, String pageAddr, Type type){
 		this.fileName = checkNotNull(fileName);
-		this.inline = inline;
+		this.pageAddr = checkNotNull(pageAddr);
+		this.type = type;
 	}
 	
 	@Override
@@ -21,7 +25,7 @@ public final class ScriptInformation{
 		if (obj instanceof ScriptInformation){
 			ScriptInformation that = (ScriptInformation)obj;
 			
-			return Objects.equal(this.inline, that.inline) && Objects.equal(this.fileName, that.fileName);			
+			return Objects.equal(this.type, that.type) && Objects.equal(this.pageAddr, that.pageAddr) && Objects.equal(this.fileName, that.fileName);			
 		}
 		return false;
 	}
