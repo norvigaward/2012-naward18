@@ -1,14 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>edu.utwente.mbd</groupId>
-	<artifactId>commoncrawl-jsusage</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
 	<name>Javascript Usage Analysis using the Common Crawl web crawl</name>
 	<packaging>pom</packaging>
 	<inceptionYear>2012</inceptionYear>
 
+	<developers>
+		<developer>
+			<id>ties</id>
+			<name>Ties de Kock</name>
+			<email>ties@tiesdekock.nl</email>
+		</developer>
+		<developer>
+			<id>dennis</id>
+			<name>Dennis Pallett</name>
+			<email>dennis@pallett.nl</email>
+		</developer>
+	</developers>
+
 	<properties>
+		<!-- names -->
+		<groupId>edu.utwente.mbd</groupId>
+		<artifactId>commoncrawl-jsusage</artifactId>
+		<version>0.1-SNAPSHOT</version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- CDH3 -->
 		<hadoop.version>0.20.2-cdh3u5</hadoop.version>
