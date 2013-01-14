@@ -46,7 +46,7 @@ public class TestScriptExtraction {
 		int total = 0, inline = 0, external = 0, unrecognized = 0;
 		
 		for(ScriptInformation s : buildExtractor(url, doc)){
-			System.out.println(String.format("%s inline? %b".format(s.fileName, s.type)));
+			System.out.println(String.format("%s %s inline? %s".format(s.fileName, s.pageAddr, s.type)));
 		}
 		
 		// it has a jQuery plugin
