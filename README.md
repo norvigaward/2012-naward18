@@ -9,3 +9,11 @@ This repository contains all the code used for the Norvig Award, this code is ex
 
 ##Results
 See https://github.com/norvigaward/naward18/wiki/Report
+
+##Contact and support
+If you have any questions regarding the code or the report you can contact us:
+Dennis Pallett (dennis@pallett.nl)
+Marcel Boersma (boersma.marcel@gmail.com)
+Niels Visser (nsvisser@gmail.com)
+Ties de Kock (ties@tiesdekock.nl)
+
