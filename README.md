@@ -1,4 +1,4 @@
-naward18
+Javascript usage analyses
 ========
 This report describes our challenge submission for the Norvig Award. Using the SARA cluster and the CommonCrawl data we have looked into the use of JavaScript libraries on the web and have tried to determine the most popular libraries.
 
