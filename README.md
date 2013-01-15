@@ -13,11 +13,8 @@ See [results](https://github.com/norvigaward/naward18/wiki/Report) for our analy
 ##Contact and support
 If you have any questions regarding the code or the report you can contact us:
 
-Dennis Pallett (dennis@pallett.nl)
-
-Marcel Boersma (boersma.marcel@gmail.com)
-
-Niels Visser (nsvisser@gmail.com)
-
-Ties de Kock (ties@tiesdekock.nl)
+* Dennis Pallett (dennis@pallett.nl)
+* Marcel Boersma (boersma.marcel@gmail.com)
+* Niels Visser (nsvisser@gmail.com)
+* Ties de Kock (ties@tiesdekock.nl)
 
