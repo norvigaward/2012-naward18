@@ -8,7 +8,7 @@ This repository contains all the code used for the Norvig Award, this code is ex
 
 
 ##Results
-See https://github.com/norvigaward/naward18/wiki/Report
+See [results](https://github.com/norvigaward/naward18/wiki/Report) for our analyses on the dataset.
 
 ##Contact and support
 If you have any questions regarding the code or the report you can contact us:
